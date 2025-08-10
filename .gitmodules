@@ -1,0 +1,3 @@
+[submodule "vendor/discord-rpc"]
+	path = vendor/discord-rpc
+	url = https://github.com/fenrirbots/discord-rpc
