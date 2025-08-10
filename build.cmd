@@ -6,7 +6,7 @@ set intd=%root%\build\int
 set outd=%root%\build\bin
 set libd=%root%\build\bin
 
-set in=-I inc -I vendor/discord-rpc/inc
+set in=-I inc -I vendor/discord-rpc/inc -I vendor/parson/inc
 set cc=-c -Wmain -Wimplicit -Wparentheses -Wmissing-braces -Wformat -Wcomment ^
           -Wchar-subscripts -Wsequence-point -Wreturn-type -Wunused -Wuninitialized --std=c99
 set ld=
@@ -46,9 +46,13 @@ if not exist %intd% (
 )
 
 cd "vendor\discord-rpc"
-call "build.cmd"
+call "build.cmd" %*
 cd "..\..\"
 copy "vendor\discord-rpc\build\bin\*" "build\bin"
+cd "vendor\parson"
+call "build.cmd" %*
+cd "..\..\"
+copy "vendor\parson\build\bin\*" "build\bin"
 
 call gcc.exe %cc% %in% %srcd%\entrypoint.c ^
                     -o %intd%\entrypoint.o
