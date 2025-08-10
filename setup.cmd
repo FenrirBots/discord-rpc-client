@@ -7,7 +7,11 @@ if [%errorlevel%] neq [0] (
   goto :end
 )
 
-if not exist vendor\discord-rpc\setup.cmd (
+if not exist vendor\parson\build.cmd (
+  git submodule update --init --recursive
+)
+
+if not exist vendor\discord-rpc\build.cmd (
   git submodule update --init --recursive
 )
 
