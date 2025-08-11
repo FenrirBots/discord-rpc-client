@@ -159,7 +159,6 @@ end:
   return result;
 }
 
-/* Returns a copy, This needs to be freed after use. */
 char *
 config_get_string(
   char *key)

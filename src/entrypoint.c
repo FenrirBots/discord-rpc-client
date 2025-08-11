@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "config.h"
 #include "discord_rpc.h"
@@ -54,6 +55,12 @@ reload:
 	DiscordRichPresence presence
 	  = { 0 };
 
+	char *privacy = config_get_string("privacy");	
+	presence.partyPrivacy     = DISCORD_PARTY_PUBLIC;
+
+	if (strnicmp(privacy, "private", 7))
+		presence.partyPrivacy   = DISCORD_PARTY_PRIVATE;
+
 	presence.state            = config_get_string("state");
 	presence.startTimestamp   = config_get_number("timestamp-start");
 	presence.endTimestamp     = config_get_number("timestamp-end");
@@ -62,7 +69,6 @@ reload:
 	presence.partyId          = config_get_string("party-id");
 	presence.partySize        = config_get_number("party-current");
 	presence.partyMax         = config_get_number("party-maximum");
-	presence.partyPrivacy     = DISCORD_PARTY_PUBLIC; // TODO: This
 	presence.matchSecret      = config_get_string("match");
 	presence.joinSecret       = config_get_string("join");
 	presence.spectateSecret   = config_get_string("spectate");
@@ -72,14 +78,6 @@ reload:
 	presence.buttons[1].label = config_get_button(1, "message");
 	presence.buttons[1].url   = config_get_button(1, "uri");
 	Discord_UpdatePresence(&presence);
-
-	// free(presence.spectateSecret);
-	// free(presence.joinSecret);
-	// free(presence.matchSecret);
-	// free(presence.partyId);
-	// free(presence.smallImageKey);
-	// free(presence.largeImageKey);
-	// free(presence.state);
 
   while (1)
   {
