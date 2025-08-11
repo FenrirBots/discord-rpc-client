@@ -51,41 +51,35 @@ reload:
 	Discord_Initialize(appid, &events, 1, NULL);
 	free(appid);
 
-	DiscordButton       buttons[2]
-	  = { 0 };
 	DiscordRichPresence presence
 	  = { 0 };
 
-  /* Temporary code until i get a proper configuration working... */
-  buttons[0].label = config_get_button(0, "message");
-	buttons[0].url   = config_get_button(0, "uri");
-	buttons[1].label = config_get_button(1, "message");
-  buttons[1].url   = config_get_button(1, "uri");
-
-	presence.state          = config_get_string("state");
-	presence.startTimestamp = config_get_number("timestamp-start");
-	presence.endTimestamp   = config_get_number("timestamp-end");
-	presence.largeImageKey  = config_get_string("image-large");
-	presence.smallImageKey  = config_get_string("image-small");
-	presence.partyId        = config_get_string("party-id");
-	presence.partySize      = config_get_number("party-current");
-	presence.partyMax       = config_get_number("party-maximum");
-	presence.partyPrivacy   = DISCORD_PARTY_PUBLIC; // TODO: This
-	presence.matchSecret    = config_get_string("match");
-	presence.joinSecret     = config_get_string("join");
-	presence.spectateSecret = config_get_string("spectate");
-	presence.instance       = 0;
-	presence.buttons[0]     = buttons[0];
-	presence.buttons[1]     = buttons[1];
+	presence.state            = config_get_string("state");
+	presence.startTimestamp   = config_get_number("timestamp-start");
+	presence.endTimestamp     = config_get_number("timestamp-end");
+	presence.largeImageKey    = config_get_string("image-large");
+	presence.smallImageKey    = config_get_string("image-small");
+	presence.partyId          = config_get_string("party-id");
+	presence.partySize        = config_get_number("party-current");
+	presence.partyMax         = config_get_number("party-maximum");
+	presence.partyPrivacy     = DISCORD_PARTY_PUBLIC; // TODO: This
+	presence.matchSecret      = config_get_string("match");
+	presence.joinSecret       = config_get_string("join");
+	presence.spectateSecret   = config_get_string("spectate");
+	presence.instance         = 0;
+	presence.buttons[0].label = config_get_button(0, "message");
+	presence.buttons[0].url   = config_get_button(0, "uri");
+	presence.buttons[1].label = config_get_button(1, "message");
+	presence.buttons[1].url   = config_get_button(1, "uri");
 	Discord_UpdatePresence(&presence);
 
-	free(presence.spectateSecret);
-	free(presence.joinSecret);
-	free(presence.matchSecret);
-	free(presence.partyId);
-	free(presence.smallImageKey);
-	free(presence.largeImageKey);
-	free(presence.state);
+	// free(presence.spectateSecret);
+	// free(presence.joinSecret);
+	// free(presence.matchSecret);
+	// free(presence.partyId);
+	// free(presence.smallImageKey);
+	// free(presence.largeImageKey);
+	// free(presence.state);
 
   while (1)
   {

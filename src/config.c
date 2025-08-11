@@ -181,11 +181,7 @@ config_get_string(
     goto end;
   }
 
-  result = calloc((json_value_get_string_len(value)), sizeof(char));
-
-  strncpy(result,
-          json_value_get_string(value),
-          json_value_get_string_len(value));
+  result = json_value_get_string(value);
 end:
   return result;
 }
@@ -261,11 +257,7 @@ config_get_secret(
     goto end;
   }
 
-  result = calloc((json_value_get_string_len(value)), sizeof(char));
-
-  strncpy(result,
-          json_value_get_string(value),
-          json_value_get_string_len(value));
+  result = json_value_get_string(value);
 end:
   return result;
 }
@@ -318,11 +310,7 @@ config_get_button(
     goto end;
   }
 
-  result = calloc((json_value_get_string_len(value)), sizeof(char));
-
-  strncpy(result,
-          json_value_get_string(value),
-          json_value_get_string_len(value));
+  result = json_value_get_string(value);
 end:
   return result;
 }
