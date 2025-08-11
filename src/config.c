@@ -111,7 +111,7 @@ int config_validate()
   int          iter   = 0;
   int          result = 0;
 
-  if (!config_validate_value(g_root, "status"         , JSONString) ||
+  if (!config_validate_value(g_root, "state"          , JSONString) ||
       !config_validate_value(g_root, "image-small"    , JSONString) ||
       !config_validate_value(g_root, "image-large"    , JSONString) ||
       !config_validate_value(g_root, "party-id"       , JSONString) ||
