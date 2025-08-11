@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "discord_rpc.h"
 
 
@@ -11,37 +12,31 @@ int main(
   int    argc,
   char **argv)
 {
-  /* Temporary code until i get a proper configuration working... */
-  FILE *file;
-  long  length;
-  char  appid[32];
+	char *appid      = NULL;
+	int   retry_load = 0;
 
-  file   = fopen("secrets.txt", "r+");
-  length = 0;
-	memset(appid, 0, 32);
-  
-  if (file == NULL)
-  {
-		file = fopen("secrets.txt", "w+");
-		if (file == NULL)
+	config_init("config.json");
+
+reload:
+	if (!config_load())
+	{
+		printf("attempting to save defaults.\n");
+		config_save_defaults();
+
+		if (retry_load)
 		{
-			printf("Could not create the file. (0x%x)\n", errno);
+			printf("the file 'config.json' could not be loaded.\n");
 			goto end;
 		}
 
-		printf("The secrets.txt file has been created\nput your appid in there and run this program again.\n", errno);
-		fclose(file);
-    goto end;
-  }
+		retry_load = 1;
+		goto reload;
+	}
 
-  fseek(file, 0, SEEK_END);
-  length = ftell(file);
-  fseek(file, 0, SEEK_SET);
-	
-  fread(appid, sizeof(char), length, file);
-	printf("%i\n", length);
-	printf("%s\n", appid);
-	fclose(file);
+	if (!config_validate())
+	{
+	  printf("Validation failed.\n");
+	}
 
 	DiscordEventHandlers events
 		= { 0 };
@@ -51,7 +46,10 @@ int main(
 	events.joinGame     = NULL;
 	events.spectateGame = NULL;
 	events.joinRequest  = NULL;
+
+	appid = config_get_secret("application-id");
 	Discord_Initialize(appid, &events, 1, NULL);
+	free(appid);
 
 	DiscordButton       buttons[2]
 	  = { 0 };
@@ -59,28 +57,35 @@ int main(
 	  = { 0 };
 
   /* Temporary code until i get a proper configuration working... */
-  buttons[0].label = "Website";
-	buttons[0].url   = "https://fenrirbots.neocities.org/";
-	buttons[1].label = "Github";
-  buttons[1].url   = "https://github.com/FenrirBots";
+  buttons[0].label = config_get_button(0, "message");
+	buttons[0].url   = config_get_button(0, "uri");
+	buttons[1].label = config_get_button(1, "message");
+  buttons[1].url   = config_get_button(1, "uri");
 
-	presence.state          = "Questioning life...";
-	presence.startTimestamp = 0;
-	presence.endTimestamp   = 0;
-	presence.largeImageKey  = "mahiro";
-	presence.smallImageKey  = "";
-	presence.partyId        = "cafe";
-	presence.partySize      = 1;
-	presence.partyMax       = 4;
-	presence.partyPrivacy   = DISCORD_PARTY_PUBLIC;
-	presence.matchSecret    = "000003e8-73df-21f0-b900-325096b39f47";
-	presence.joinSecret     = "000003e8-73df-21f0-8000-325096b39f47";
-	presence.spectateSecret = "000003e8-73df-21f0-9200-325096b39f47";
+	presence.state          = config_get_string("state");
+	presence.startTimestamp = config_get_number("timestamp-start");
+	presence.endTimestamp   = config_get_number("timestamp-end");
+	presence.largeImageKey  = config_get_string("image-large");
+	presence.smallImageKey  = config_get_string("image-small");
+	presence.partyId        = config_get_string("party-id");
+	presence.partySize      = config_get_number("party-current");
+	presence.partyMax       = config_get_number("party-maximum");
+	presence.partyPrivacy   = DISCORD_PARTY_PUBLIC; // TODO: This
+	presence.matchSecret    = config_get_string("match");
+	presence.joinSecret     = config_get_string("join");
+	presence.spectateSecret = config_get_string("spectate");
 	presence.instance       = 0;
 	presence.buttons[0]     = buttons[0];
 	presence.buttons[1]     = buttons[1];
 	Discord_UpdatePresence(&presence);
 
+	free(presence.spectateSecret);
+	free(presence.joinSecret);
+	free(presence.matchSecret);
+	free(presence.partyId);
+	free(presence.smallImageKey);
+	free(presence.largeImageKey);
+	free(presence.state);
 
   while (1)
   {

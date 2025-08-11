@@ -57,4 +57,7 @@ copy "vendor\parson\build\bin\*" "build\bin"
 call gcc.exe %cc% %in% %srcd%\entrypoint.c ^
                     -o %intd%\entrypoint.o
 
-call g++.exe %ld% -o %outd%\discord-rpc-client.exe %intd%\* -L %libd% -l discord-rpc
+call gcc.exe %cc% %in% %srcd%\config.c ^
+                    -o %intd%\config.o
+
+call g++.exe %ld% -o %outd%\discord-rpc-client.exe %intd%\* -L %libd% -l discord-rpc -l json
