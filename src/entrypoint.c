@@ -68,7 +68,7 @@ int main(
 
   while (1)
   {
-
+		Sleep(250);
   }
 end:
   return 0;
