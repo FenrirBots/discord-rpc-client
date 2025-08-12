@@ -41,7 +41,9 @@ int config_load()
   
   if (NULL == g_root)
   {
+    printf("No configuration file was found\n\n");
     config_save_defaults();
+    goto end;
   }
 
   result = 1;
@@ -51,20 +53,54 @@ end:
 
 int config_save_defaults()
 {
-  json_value_free(g_root);
+  JSON_Object *object;
+  JSON_Value  *value;
+  JSON_Array  *array;
+  int          iter;
 
-  /*
-    Create a new json object with what we want...
-  */
+  json_value_free(g_root);
+  
+  g_root = json_value_init_object();
+  object = json_value_get_object(g_root);
+
+  json_object_set_string_with_len(object, "state"          , "Playing <insert game here>", 0);
+  json_object_set_string_with_len(object, "image-small"    , "default", 0);
+  json_object_set_string_with_len(object, "image-large"    , "default", 0);
+  json_object_set_string_with_len(object, "party-id"       , "", 0);
+  json_object_set_string_with_len(object, "privacy"        , "public", 0);
+  
+  json_object_set_number(object, "party-current"  , 1);
+  json_object_set_number(object, "party-maximum"  , 4);
+  json_object_set_number(object, "timestamp-start", 0);
+  json_object_set_number(object, "timestamp-end"  , 0);
+
+  json_object_set_value(object, "secrets", json_value_init_object());
+  object = json_object_get_object(object, "secrets");
+
+  json_object_set_string_with_len(object, "application-id", "0000000000000000", 16);
+  json_object_set_string_with_len(object, "match"         , "secret", 6);
+  json_object_set_string_with_len(object, "join"          , "secret", 6);
+  json_object_set_string_with_len(object, "spectate"      , "secret", 6);
+
+  object = json_value_get_object(g_root);
+  json_object_set_value(object, "buttons", json_value_init_array());
+  
+  array = json_object_get_array(object, "buttons");
+  json_array_append_value(array, json_value_init_object());
+  json_array_append_value(array, json_value_init_object());
+
+  for (iter = 0; iter < 2; iter++)
+  {
+    value  = json_array_get_value(array, iter);
+    object = json_value_get_object(value);
+
+    json_object_set_string_with_len(object, "message", "Example Button", 0);
+    json_object_set_string_with_len(object, "uri"    , "https://example.com", 0);
+  }
 
   json_serialize_to_file_pretty(g_root, g_filename);
-
-  /*
-    We can continue as normal from here 
-           as long as no errors occured.
-    
-    No need to free the new root as it can be reused.
-  */
+  printf("A new configuration file has been generated\n");
+  printf("   Change the configuration and run this program again\n");
 
   return 0;
 }
