@@ -65,6 +65,7 @@ int main(
 	presence.buttons[1].label = config_get_button(1, "message");
 	presence.buttons[1].url   = config_get_button(1, "uri");
 	Discord_UpdatePresence(&presence);
+	printf("Broadcasting presence...\n");
 
   while (1)
   {
