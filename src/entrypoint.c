@@ -13,9 +13,9 @@ int main(
   int    argc,
   char **argv)
 {
-	char               *appid = NULL;
-	DiscordRichPresence presence
-	  = { 0 };
+	char                *appid    = NULL;
+	DiscordRichPresence  presence = { 0 };
+	DiscordEventHandlers events  = { 0 };
 
 	config_init("config.json");
 
@@ -29,8 +29,6 @@ int main(
 	  printf("Validation failed.\n");
 	}
 
-	DiscordEventHandlers events
-		= { 0 };
 	events.ready        = NULL;
 	events.disconnected = NULL;
 	events.errored      = NULL;
