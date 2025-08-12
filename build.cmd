@@ -40,6 +40,12 @@ goto :ship
 if not exist %outd% (
   mkdir %outd%
 )
+if not exist %outd%\licenses (
+  mkdir %outd%\licenses
+)
+
+copy "vendor\discord-rpc\license" "%outd%\licenses\discord-rpc"
+copy "vendor\parson\license" "%outd%\licenses\parson"
 
 if not exist %intd% (
   mkdir %intd%
