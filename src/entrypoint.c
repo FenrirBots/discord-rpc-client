@@ -13,25 +13,15 @@ int main(
   int    argc,
   char **argv)
 {
-	char *appid      = NULL;
-	int   retry_load = 0;
+	char               *appid = NULL;
+	DiscordRichPresence presence
+	  = { 0 };
 
 	config_init("config.json");
 
-reload:
 	if (!config_load())
 	{
-		printf("attempting to save defaults.\n");
-		config_save_defaults();
-
-		if (retry_load)
-		{
-			printf("the file 'config.json' could not be loaded.\n");
-			goto end;
-		}
-
-		retry_load = 1;
-		goto reload;
+		goto end;
 	}
 
 	if (!config_validate())
@@ -51,9 +41,6 @@ reload:
 	appid = config_get_secret("application-id");
 	Discord_Initialize(appid, &events, 1, NULL);
 	free(appid);
-
-	DiscordRichPresence presence
-	  = { 0 };
 
 	char *privacy = config_get_string("privacy");	
 	presence.partyPrivacy     = DISCORD_PARTY_PUBLIC;
