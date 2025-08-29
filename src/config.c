@@ -63,12 +63,19 @@ int config_save_defaults()
   g_root = json_value_init_object();
   object = json_value_get_object(g_root);
 
-  json_object_set_string_with_len(object, "state"          , "Playing <insert game here>", 0);
-  json_object_set_string_with_len(object, "image-small"    , "default", 0);
-  json_object_set_string_with_len(object, "image-large"    , "default", 0);
-  json_object_set_string_with_len(object, "party-id"       , "", 0);
-  json_object_set_string_with_len(object, "privacy"        , "public", 0);
+  json_object_set_string_with_len(object, "state"           , "Playing <insert game here>", 0);
+  json_object_set_string_with_len(object, "state-uri"       , "", 0);
+  json_object_set_string_with_len(object, "image-small"     , "default", 0);
+  json_object_set_string_with_len(object, "image-small-text", "", 0);
+  json_object_set_string_with_len(object, "image-small-uri" , "", 0);
+  json_object_set_string_with_len(object, "image-large"     , "default", 0);
+  json_object_set_string_with_len(object, "image-large-text", "", 0);
+  json_object_set_string_with_len(object, "image-large-uri" , "", 0);
+  json_object_set_string_with_len(object, "party-id"        , "", 0);
+  json_object_set_string_with_len(object, "privacy"         , "public", 0);
   
+  json_object_set_number(object, "status-type"    , 1);
+  json_object_set_number(object, "activity-type"  , 1);
   json_object_set_number(object, "party-current"  , 1);
   json_object_set_number(object, "party-maximum"  , 4);
   json_object_set_number(object, "timestamp-start", 0);

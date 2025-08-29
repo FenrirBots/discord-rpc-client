@@ -15,7 +15,7 @@ int main(
 {
 	char                *appid    = NULL;
 	DiscordRichPresence  presence = { 0 };
-	DiscordEventHandlers events  = { 0 };
+	DiscordEventHandlers events   = { 0 };
 
 	config_init("config.json");
 
@@ -46,22 +46,29 @@ int main(
 	if (strnicmp(privacy, "private", 7))
 		presence.partyPrivacy   = DISCORD_PARTY_PRIVATE;
 
-	presence.state            = config_get_string("state");
-	presence.startTimestamp   = config_get_number("timestamp-start");
-	presence.endTimestamp     = config_get_number("timestamp-end");
-	presence.largeImageKey    = config_get_string("image-large");
-	presence.smallImageKey    = config_get_string("image-small");
-	presence.partyId          = config_get_string("party-id");
-	presence.partySize        = config_get_number("party-current");
-	presence.partyMax         = config_get_number("party-maximum");
-	presence.matchSecret      = config_get_string("match");
-	presence.joinSecret       = config_get_string("join");
-	presence.spectateSecret   = config_get_string("spectate");
-	presence.instance         = 0;
-	presence.buttons[0].label = config_get_button(0, "message");
-	presence.buttons[0].url   = config_get_button(0, "uri");
-	presence.buttons[1].label = config_get_button(1, "message");
-	presence.buttons[1].url   = config_get_button(1, "uri");
+	presence.state               = config_get_string("state");
+	presence.stateUrl            = config_get_string("state-uri");
+	presence.startTimestamp      = config_get_number("timestamp-start");
+	presence.endTimestamp        = config_get_number("timestamp-end");
+	presence.largeImageKey       = config_get_string("image-large");
+	presence.largeImageText      = config_get_string("image-large-text");
+	presence.largeImageUrl       = config_get_string("image-large-url");
+	presence.smallImageKey       = config_get_string("image-small");
+	presence.smallImageText      = config_get_string("image-small-text");
+	presence.smallImageUrl       = config_get_string("image-small-url");
+	presence.partyId             = config_get_string("party-id");
+	presence.partySize           = config_get_number("party-current");
+	presence.partyMax            = config_get_number("party-maximum");
+	presence.matchSecret         = config_get_string("match");
+	presence.joinSecret          = config_get_string("join");
+	presence.spectateSecret      = config_get_string("spectate");
+	presence.status_display_type = config_get_number("status-type");
+	presence.type                = config_get_number("activity-type");
+	presence.instance            = 0;
+	presence.buttons[0].label    = config_get_button(0, "message");
+	presence.buttons[0].url      = config_get_button(0, "uri");
+	presence.buttons[1].label    = config_get_button(1, "message");
+	presence.buttons[1].url      = config_get_button(1, "uri");
 	Discord_UpdatePresence(&presence);
 	printf("Broadcasting presence...\n");
 
